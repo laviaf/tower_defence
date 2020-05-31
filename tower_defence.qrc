@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/">
+        <file>material/world_map.jpg</file>
+        <file>material/music_main.mp3</file>
+        <file>material/action_button.png</file>
+        <file>material/paki.png</file>
+        <file>material/cp9.png</file>
+        <file>material/map_101.jpg</file>
+        <file>material/tower_set.png</file>
+        <file>material/main_window.jpg</file>
+    </qresource>
+    <qresource prefix="/music">
+        <file>material/music1.mp3</file>
+    </qresource>
+    <qresource prefix="/luffy">
+        <file>material/crew_lufu.png</file>
+        <file>material/crew_lufu_upgrade1.png</file>
+        <file>material/crew_lufu_upgrade2.png</file>
+    </qresource>
+    <qresource prefix="/enemy">
+        <file>material/enemy1.png</file>
+        <file>material/enemy_finalboss.png</file>
+        <file>material/enemy_boss3.png</file>
+        <file>material/enemy_boss4.png</file>
+        <file>material/enemy_boss2.png</file>
+        <file>material/enemy_boss1.png</file>
+        <file>material/enemy3.png</file>
+        <file>material/enemy2.png</file>
+    </qresource>
+</RCC>
