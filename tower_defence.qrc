@@ -11,11 +11,7 @@
     </qresource>
     <qresource prefix="/music">
         <file>material/music1.mp3</file>
-    </qresource>
-    <qresource prefix="/luffy">
-        <file>material/crew_lufu.png</file>
-        <file>material/crew_lufu_upgrade1.png</file>
-        <file>material/crew_lufu_upgrade2.png</file>
+        <file>material/enemy_dead.mp3</file>
     </qresource>
     <qresource prefix="/enemy">
         <file>material/enemy1.png</file>
@@ -25,6 +21,11 @@
         <file>material/enemy_boss2.png</file>
         <file>material/enemy_boss1.png</file>
         <file>material/enemy3.png</file>
-        <file>material/enemy2.png</file>
+        <file>material/enemy2(1).png</file>
+    </qresource>
+    <qresource prefix="/tower">
+        <file>material/crew_lufu.png</file>
+        <file>material/crew_lufu_upgrade1.png</file>
+        <file>material/crew_lufu_1.png</file>
     </qresource>
 </RCC>

@@ -30,7 +30,10 @@ SOURCES += \
     world_map.cpp \
     level1.cpp \
     tower_position.cpp \
-    enemy.cpp
+    enemy.cpp \
+    utility.cpp \
+    way_point.cpp \
+    tower.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,7 +41,10 @@ HEADERS += \
     world_map.h \
     level1.h \
     tower_position.h \
-    enemy.h
+    enemy.h \
+    utility.h \
+    way_point.h \
+    tower.h
 
 FORMS += \
         mainwindow.ui

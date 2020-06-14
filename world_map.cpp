@@ -1,6 +1,9 @@
 #include "world_map.h"
 #include "start_click.h"
+#include "mainwindow.h"
 #include "level1.h"
+
+#include <QMediaPlayer>
 #include <QPixmap>
 #include <QWidget>
 #include <QPainter>
@@ -13,12 +16,12 @@ world_map::world_map(QWidget *parent) : QMainWindow(parent)
 {
     this->setFixedSize(1000,626);
 
-    //关卡按钮
+    //第一关按钮
     start_click *btn1 = new start_click(":/material/paki.png");
     btn1->setParent(this);
     btn1->move(750,150);
 
-    //信号连接
+    //连接第一关和世界地图
     lev1_map=new level1;
     connect(btn1,&QPushButton::clicked,this,[=](){
         this->hide();

@@ -32,8 +32,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(click,&QPushButton::clicked,this,[=](){
         this->hide();
         map->show();
+        //更换背景音乐
+        main_music->setVolume(0);
+        QMediaPlayer *lev1_music=new QMediaPlayer;
+        lev1_music->setMedia(QUrl("qrc:/music/material/music1.mp3"));
+        lev1_music->setVolume(30);
+        lev1_music->play();
     });
-    //连接世界地图与开始按钮
+    //连接开始按钮和世界地图
 }
 
 MainWindow::~MainWindow()
