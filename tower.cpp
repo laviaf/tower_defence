@@ -1,42 +1,172 @@
 #include "tower.h"
+#include "utility.h"
 
+#include <QList>
 #include <iostream>
 using namespace std;
 
-tower::tower(QPoint pos,int t_num):t_pos(pos)
+class utility;
+
+tower::tower(QPoint pos,int t_num,level1 *game_1):
+    t_pos(pos),attacked_enemy(NULL),game(game_1),choose(t_num),grade(0)
 {
-    switch (t_num) {
-    case 1://初级塔
+    switch (choose) {
+    case 1://防御塔1
     {
         t_img.load(":/tower/material/crew_lufu_1.png");
-        this->fire_rate=2000;
+        this->fire_rate=1000;//开炮间隔
         this->attack_range=100;
-        this->damage=20;
+        this->damage=40;
+        this->update_cost=200;
+        this->destruct_bonus=100;
         break;
     }
-    case 2://二级塔
+    case 2://防御塔2
     {
-        QImage inst2;
-        inst2.load(":/tower/material/crew_lufu_upgrade1.png");
-        t_img=inst2.copy(QRect(2.5,1.9,2,2));
+        t_img.load(":/tower/material/zoro.png");
         this->fire_rate=1000;
-        this->attack_range=170;
-        this->damage=50;
+        this->attack_range=105;
+        this->damage=35;
+        this->update_cost=150;
+        this->destruct_bonus=100;
         break;
+    }
+    default:
+        break;
+    }
+    shoot_timer=new QTimer(this);
+    connect(shoot_timer, SIGNAL(timeout()), this, SLOT(shoot_bullet()));
+}
+
+void tower::upgrade(){
+    switch (choose) {
+    case 1:{
+        if(grade==0){
+            //防御塔1升级1
+            t_img.load(":/tower/material/crew_lufu_upgrade2.png");
+            this->fire_rate=800;
+            this->attack_range=150;
+            this->damage=70;
+            this->update_cost=300;
+            this->destruct_bonus=200;
+            this->grade=1;
+            break;
+        }
+        else if(grade==1){
+            //防御塔1升级2
+            this->fire_rate=650;
+            this->attack_range=170;
+            this->damage=150;
+            this->update_cost=0;
+            this->destruct_bonus=400;
+            this->grade=2;
+            break;
+        }
+    }
+    case 2:{
+        if(grade==0){
+            //防御塔2升级1
+            t_img.load(":/tower/material/zoro_update.png");
+            this->fire_rate=900;
+            this->attack_range=130;
+            this->damage=60;
+            this->update_cost=200;
+            this->destruct_bonus=150;
+            this->grade=1;
+            break;
+        }
+        else if(grade==1){
+            //防御塔2升级2
+            this->fire_rate=800;
+            this->attack_range=140;
+            this->damage=110;
+            this->update_cost=0;
+            this->destruct_bonus=200;
+            this->grade=2;
+            break;
+        }
     }
     default:
         break;
     }
 }
 
+//检查敌人被攻击状态
+void tower::is_enemy_can_attack(){
+    utility check;//用于判断是否进入攻击范围
+    if(attacked_enemy){
+        //失去敌人视野
+        if (!check.collisionRange(this->t_pos,(double)attack_range,attacked_enemy->getpos(),1))
+            lose_sight();
+    }
+    else{
+        QList<enemy*> ene_list=game->get_ene_list();
+        foreach(enemy* ene,ene_list){
+            if(check.collisionRange(this->t_pos,(double)attack_range,ene->getpos(),0)){
+                get_attacked_enemy(ene);
+                break;
+            }
+        }
+    }
+}
 
 void tower::draw(QPainter *painter){
     painter->save();
 
     //画出攻击范围
     painter->setPen(Qt::red);
-    painter->drawEllipse(t_pos,attack_range,attack_range);
+    QPoint center(t_pos.x()+24,t_pos.y()+24);
+    painter->drawEllipse(center,attack_range,attack_range);
     painter->drawImage(t_pos.x(),t_pos.y(),t_img);
 
     painter->restore();
+}
+
+void tower::attack(){
+    shoot_timer->start(this->fire_rate);
+}
+
+//获得被攻击敌人
+void tower::get_attacked_enemy(enemy *ene){
+    attacked_enemy=ene;
+    attack();
+    ene->add_tower_attacked(this);
+}
+
+void tower::lose_sight(){
+    attacked_enemy->get_lose_sight(this);
+    if (attacked_enemy)
+        attacked_enemy = NULL;
+    this->shoot_timer->stop();
+}
+
+//发射子弹并实现子弹移动
+void tower::shoot_bullet(){
+    bullet *bul=new bullet(t_pos,attacked_enemy->getpos(),this->damage,attacked_enemy,game);
+    bul->move();
+    game->add_bullet(bul);
+}
+
+void tower::enemy_killed(){
+    if(attacked_enemy){
+        attacked_enemy=NULL;
+    }
+    this->shoot_timer->stop();
+    //塔旋回正位功能待留实现
+}
+
+void tower::removed(){
+    if(attacked_enemy!=NULL){
+        attacked_enemy->get_lose_sight(this);
+        attacked_enemy==NULL;
+    }
+    game->remove_tower(this);
+}
+
+int tower::get_updatecost(){
+    return this->update_cost;
+}
+
+int tower::get_destruct_bonus(){
+    return this->destruct_bonus;
 }

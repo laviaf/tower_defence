@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setFixedSize(1000,626);
     ui->setupUi(this);
 
-    QMediaPlayer *main_music=new QMediaPlayer;
+    main_music=new QMediaPlayer;
     main_music->setMedia(QUrl("qrc:/material/music_main.mp3"));
     main_music->setVolume(30);
     main_music->play();
@@ -28,16 +28,10 @@ MainWindow::MainWindow(QWidget *parent) :
     click->move(420,400);
     //开始按钮
 
-    map=new world_map;
+    map=new world_map(this);
     connect(click,&QPushButton::clicked,this,[=](){
         this->hide();
         map->show();
-        //更换背景音乐
-        main_music->setVolume(0);
-        QMediaPlayer *lev1_music=new QMediaPlayer;
-        lev1_music->setMedia(QUrl("qrc:/music/material/music1.mp3"));
-        lev1_music->setVolume(30);
-        lev1_music->play();
     });
     //连接开始按钮和世界地图
 }
@@ -56,4 +50,8 @@ void MainWindow::paintEvent(QPaintEvent *event){
 
 void MainWindow::updateScene(){
     update();
+}
+
+void MainWindow::mute_music(){
+    main_music->setVolume(0);
 }

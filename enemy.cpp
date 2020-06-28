@@ -3,40 +3,55 @@
 
 #include <QTimer>
 #include <QVector>
-#include <QPropertyAnimation>
 #include <QMediaPlayer>
+#include <QPropertyAnimation>
+#include <QVector2D>
 
 #include <iostream>
 using namespace std;
 
-enemy::enemy(QList<way_point*> route, int _num) : QObject(0),enemy_dest_point(route[1]),num(_num)
+enemy::enemy(way_point* start_point, int _num, level1* game_1) :
+    QObject(0),enemy_dest_point(start_point->nextWayPoint()),num(_num),game(game_1),die_num(0)
 {
     switch (num) {
-    case 1://新手村
+    case 1://新手村 小兵1
     {
         enemy_img.load(":/enemy/material/enemy2(1).png");
-        this->Hp_max=200;
-        this->Hp_current=200;
+        this->Hp_max=500;
+        this->Hp_current=500;
         this->walk_speed=1.0;
         break;
     }
-    case 2://人鱼村
+    case 2://新手村 小兵2
     {
-        QImage inst2;
-        inst2.load(":/enemy/material/enemy1.png");
-        enemy_img=inst2.copy(QRect(0,0,3,2));
+        enemy_img.load(":/enemy/material/enemy1(1).png");
         this->Hp_max=300;
         this->Hp_current=300;
-        this->walk_speed=1.0;
+        this->walk_speed=5.0;
+        break;
+    }
+    case 3://新手村 小兵3
+    {
+        enemy_img.load(":/enemy/material/enemy3(1).png");
+        this->Hp_max=1800;
+        this->Hp_current=1800;
+        this->walk_speed=2.5;
+        break;
+    }
+    case 4://新手村boss
+    {
+        enemy_img.load(":/enemy/material/baki.jpg");
+        this->Hp_max=5000;
+        this->Hp_current=5000;
+        this->walk_speed=3.0;
         break;
     }
     default:
         break;
     }
-    enemy_pos_current=route[0]->getpos();
+    enemy_pos_current=start_point->getpos();
+    is_active=false;
 }
-
-
 
 void enemy::draw(QPainter *painter){
     //当前位置绘制敌人
@@ -62,14 +77,12 @@ void enemy::draw(QPainter *painter){
 
 
 //敌人沿设定路径进行运动
-//递归
 void enemy::move(){
+    if(is_active==false){
+        return;
+    }
+
     utility judge;
-    QPropertyAnimation *act = new QPropertyAnimation(this,"enemy_pos_current");
-    act->setDuration(9000);
-    act->setStartValue(enemy_pos_current);
-    act->setEndValue(enemy_dest_point->getpos());
-    act->start();
     if (judge.collisionRange(enemy_pos_current,1,enemy_dest_point->getpos(),1)){
         // 敌人抵达了一个航点
         if (enemy_dest_point->nextWayPoint())	{
@@ -81,29 +94,82 @@ void enemy::move(){
         }
         else
         {
-            // 表示进入基地
-            //留待实现基地血量减少及敌人判死函数
+            game->remove_enemy(this);
+            game->damage_life();
             return;
+        }
+    }
+    else{
+        QPoint t_point = enemy_dest_point->getpos();
+        double movementSpeed=walk_speed;
+        QVector2D normalized(t_point-enemy_pos_current);
+        normalized.normalize();
+        enemy_pos_current = enemy_pos_current + normalized.toPoint()*movementSpeed;
+    }
+}
+
+QPoint enemy::getpos(){
+    return this->enemy_pos_current;
+}
+
+//敌人被清除
+void enemy::get_removed(){
+    if(num==4){
+        if(die_num==1){
+            if(this->tower_attacked_list.empty()){
+                return;
+            }
+            else{
+                foreach(tower *tow,tower_attacked_list){
+                    tow->enemy_killed();
+                }
+                game->remove_enemy(this);
+            }
+        }
+        else{
+            die_num+=1;
+            this->Hp_current=Hp_max;
+        }
+    }
+    else{
+        if(this->tower_attacked_list.empty()){
+            return;
+        }
+        else{
+            foreach(tower *tow,tower_attacked_list){
+                tow->enemy_killed();
+            }
+            game->remove_enemy(this);
         }
     }
 }
 
-//若死亡，返回ture
-bool enemy::is_dead(){
-    if(this->Hp_current<0){
-        return true;
-    }
-    else{
-        return false;
+void enemy::get_damaged(int dam_hp){
+    Hp_current-=dam_hp;
+    if(Hp_current<=0){
+        get_removed();
+        game->money_reward();
+        QMediaPlayer *reward=new QMediaPlayer;
+        reward->setMedia(QUrl(":/music/material/gold.mp3"));
+        reward->setVolume(30);
+        reward->play();
     }
 }
 
-//用于获得敌人动画效果
-QPoint enemy::get_ene_pos(){
-    return this->enemy_pos_current;
+void enemy::doActivate(){
+    is_active=true;
 }
-void enemy::set_ene_pos(QPoint _pos){
-    enemy_pos_current=_pos;
+
+void enemy::add_tower_attacked(tower *tow){
+    this->tower_attacked_list.push_back(tow);
+}
+
+void enemy::get_lose_sight(tower *tow){
+    this->tower_attacked_list.removeOne(tow);
+}
+
+void enemy::set_cur_pos(QPoint p){
+    enemy_pos_current=p;
 }
 
 enemy::~enemy(){

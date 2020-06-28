@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 #include "world_map.h"
 #include <QMainWindow>
+#include <QMediaPlayer>
 #include <QPainter>
 #include <Qpixmap>
 #include <QPaintEvent>
@@ -19,9 +20,11 @@ public:
     ~MainWindow();
     void paintEvent(QPaintEvent *event);
     void updateScene();
+    void mute_music();
 private:
     Ui::MainWindow *ui;
     world_map *map;
+    QMediaPlayer *main_music;
 };
 
 #endif // MAINWINDOW_H

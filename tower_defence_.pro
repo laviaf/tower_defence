@@ -33,7 +33,11 @@ SOURCES += \
     enemy.cpp \
     utility.cpp \
     way_point.cpp \
-    tower.cpp
+    tower.cpp \
+    bullet.cpp \
+    func_button.cpp \
+    lose_window.cpp \
+    win_window.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,7 +48,11 @@ HEADERS += \
     enemy.h \
     utility.h \
     way_point.h \
-    tower.h
+    tower.h \
+    bullet.h \
+    func_button.h \
+    lose_window.h \
+    win_window.h
 
 FORMS += \
         mainwindow.ui
@@ -53,3 +61,5 @@ RESOURCES += \
     tower_defence.qrc
 
 QT += multimedia
+
+

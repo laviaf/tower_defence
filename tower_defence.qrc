@@ -8,10 +8,22 @@
         <file>material/map_101.jpg</file>
         <file>material/tower_set.png</file>
         <file>material/main_window.jpg</file>
+        <file>material/life.png</file>
+        <file>material/gold.png</file>
+        <file>material/wave.png</file>
+        <file>material/function_btn.jpg</file>
+        <file>material/return.png</file>
+        <file>material/fun_btn.jpg</file>
+        <file>material/select_btn.jpg</file>
+        <file>material/sele_btn.png</file>
+        <file>material/map5.png</file>
+        <file>material/lose.jpg</file>
+        <file>material/win_.jpg</file>
     </qresource>
     <qresource prefix="/music">
-        <file>material/music1.mp3</file>
         <file>material/enemy_dead.mp3</file>
+        <file>material/gold.mp3</file>
+        <file>material/music2.mp3</file>
     </qresource>
     <qresource prefix="/enemy">
         <file>material/enemy1.png</file>
@@ -22,10 +34,17 @@
         <file>material/enemy_boss1.png</file>
         <file>material/enemy3.png</file>
         <file>material/enemy2(1).png</file>
+        <file>material/baki.jpg</file>
+        <file>material/enemy1(1).png</file>
+        <file>material/enemy3(1).png</file>
     </qresource>
     <qresource prefix="/tower">
         <file>material/crew_lufu.png</file>
         <file>material/crew_lufu_upgrade1.png</file>
         <file>material/crew_lufu_1.png</file>
+        <file>material/bullet.png</file>
+        <file>material/crew_lufu_upgrade2.png</file>
+        <file>material/zoro.png</file>
+        <file>material/zoro_update.png</file>
     </qresource>
 </RCC>
