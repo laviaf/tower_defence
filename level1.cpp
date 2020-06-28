@@ -63,14 +63,14 @@ void level1::paintEvent(QPaintEvent *event){
     {
         if(game_end){
             lose->draw(painter);
+            return;
         }
         else if(game_win){
             win->draw(painter);
+            return;
         }
-        painter->end();
-        delete painter;
-        return;
     }
+
     //绘制第一关地图
     QPixmap lev1_map;
     lev1_map.load(":/material/map5.png");
